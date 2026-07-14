@@ -1,0 +1,15 @@
+{
+  "name": "clx-autoclearmemory",
+  "description": "Cluxion agent plugins marketplace",
+  "owner": {
+    "name": "cluxion"
+  },
+  "plugins": [
+    {
+      "name": "clx-autoclearmemory",
+      "description": "ForgetForge memory lifecycle: recall, status, forgetting stages, pruner with hard caps.",
+      "version": "0.3.49",
+      "source": "./"
+    }
+  ]
+}
