@@ -9,8 +9,9 @@ description: >
   field-level IN/OUT specs, straight-line main pipeline, and a single DESIGN.md
   deliverable. Trigger: designing the structure of a NEW system/project, or a
   large-scale refactor design, or explicit requests for 설계도/아키텍처/모듈 설계/
-  파이프라인 설계/architecture/system design. Do NOT use for simple structure questions
-  or small edits.
+  파이프라인 설계/architecture/system design. Supersedes any HTML-deliverable
+  modular-architecture-design variant — never generate an HTML 설계서. Do NOT use for
+  simple structure questions or small edits.
 ---
 
 # Analysis-Driven Module Architecture Design (Library-Style)

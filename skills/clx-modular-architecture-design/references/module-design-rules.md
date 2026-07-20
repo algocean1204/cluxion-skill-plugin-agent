@@ -112,6 +112,8 @@ PIPELINE POLICY: retry(2) → skip-and-log   # what the pipeline does when this 
 
 Pipeline failure policies (choose per stage): `halt` (critical), `retry(n)` (transient),
 `skip-and-log` (per-item work). The whole-pipeline default is stated once in DESIGN.md.
+A pure total function may declare `FAIL: none (total)` — its pipeline policy line is
+still required.
 
 ### 5.5 Parallel marks and resource math
 

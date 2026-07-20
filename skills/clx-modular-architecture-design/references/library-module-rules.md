@@ -13,6 +13,9 @@ is itself evidence-gated: structure without a present driver is banned.
   under `_internal/`; TypeScript — `index.ts` re-exports; Rust — `pub` only on the surface.
 - Consumers import from the module root only, never from internal files
   (`from f1_crawler import crawl`, not `from f1_crawler.session_pool import ...`).
+- Variant packages (extension gate passed): each variant module keeps one entry; the
+  package root re-exports the contract type + the variants so the composition root's
+  selection map imports from one place.
 - The public surface IS the contract: what DESIGN.md specs is exactly what the module
   exports — no undocumented exports, no spec-less parameters.
 - Wanting two unrelated entry points is the signal to re-run the split gate.
@@ -22,6 +25,9 @@ is itself evidence-gated: structure without a present driver is banned.
 - Exactly one place — `main.py` / the top orchestrator — constructs modules and passes
   each OUT to the next IN. Feature-internal orchestrators do the same for their submodules.
 - Modules never instantiate or import sibling modules; collaborators arrive as aux IN.
+- **Type-only exception**: importing an upstream module's public OUT types (the types your
+  main IN consumes) from that module's root IS the pipeline chain and is allowed —
+  invocation wiring is what stays at the root.
 - Effect: adding, removing, or swapping a module edits **one file plus the module folder**.
 
 ## 3. Extension gate (registry / plugin pattern)

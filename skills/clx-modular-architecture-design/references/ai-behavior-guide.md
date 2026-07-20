@@ -92,6 +92,10 @@ The deliverable is a **single `DESIGN.md` at the project root**. Never generate 
 10. **Design Decision Log**: the full log accumulated in 1.4 (including [VARIANT] entries)
 11. **Migration plan** (refactor mode only): As-Is map, strangler order, cutover checks
 
+Empty-section policy: **C0 is always present** — when empty, write "none" plus the
+per-candidate denial reasons (that record is the design's value). **Extension points**
+and **Migration plan** are omitted entirely when not applicable.
+
 ### 2.2 Never omit
 - Per-stage OUT→IN chain (without it, data flow is unreadable)
 - OUT field structures (never just "Result")
@@ -112,17 +116,7 @@ The deliverable is a **single `DESIGN.md` at the project root**. Never generate 
 
 ## 3. Quality self-verification (after DESIGN.md)
 
-1. Decision-log completeness: every split/commonization/merge/variant justified
-2. Module floor: no function-sized modules
-3. C0 review: every C0 has 3+ sites / stable / domain-independent / passes standalone test
-4. OUT=1 + fields, IN sources, type-chain matches
-5. Pipeline straightness, zero circular deps
-6. Scale Gate: module count not excessive for the scale
-7. Naming consistency (snake_case / CamelCase)
-8. Failure semantics on every module + pipeline policy stated
-9. Parallel marks + saturation math when resources were quantified
-10. PUBLIC surface on every module card (one entry + types, nothing else)
-11. Wiring only at composition roots; no hidden inputs (env/config at root or C0 config)
-12. Every extension point has 2+ real variants; every feature card has a removal note
-
-Append one line at the end of DESIGN.md: `[self-check: 12/12 passed]`
+Run SKILL.md's **"Mandatory verification before declaring the design done"** — that list
+is the single canonical checklist (no separate list here). Conditional items (parallel
+marks, refactor migration) count only when applicable. Append one line at the end of
+DESIGN.md: `[self-check: N/N passed]` where N = the number of applicable items.
