@@ -21,7 +21,9 @@ description: >
 > small library: one public surface, wired in one place, deletable in one move."**
 
 Identity: OUT=1, straight-line pipeline, field-level specs, gates before structure.
-Deliverable: a **single DESIGN.md** — HTML generation forbidden.
+Deliverable: a **single DESIGN.md** — HTML generation forbidden. If the user asked for
+HTML or any other format, state the refusal explicitly in one line — never silently
+substitute. Gate refusals always surface in the same-turn report, even under goal/loop.
 
 ## Workflow
 
@@ -50,6 +52,8 @@ proceeds without approval and reports results. Under goal/loop, replace even thi
 | Large | beyond | Full hierarchy + C0. Write feature-by-feature |
 
 Decomposing past the allowed depth is forbidden unless the Phase-3 split gate provides evidence.
+The gate reads the **current** codebase size (refactor: the as-is inventory) — never the
+user's target estimate. Scale is an analysis output, not a user input.
 
 ### Phase 3: Decomposition — analysis gates (WHETHER a boundary exists)
 

@@ -13,6 +13,8 @@ features, deployment target, stack preference, scale feel (S/M/L).
 Propose as a table (area / tech / why) and get one approval.
 Everything after (hierarchy, specs, DESIGN.md) proceeds without approval and reports results.
 Under an active goal/loop, replace even this gate with "propose + state chosen default + proceed".
+Skipping the approval never hides refusals: every gate refusal (HTML/format, C0 denial,
+DI, speculative variant) is stated in the same-turn report, not just the decision log.
 
 ### 1.3 Announce the scale verdict
 State the Scale Gate verdict in one line before decomposing.

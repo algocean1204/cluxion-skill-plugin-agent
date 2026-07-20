@@ -52,7 +52,10 @@ description needs "and", calls 2+ external APIs.
 
 ## 4. C0 (common module) admission review
 
-Nothing enters C0 by category ("it's DB", "it's HTTP"). **Every candidate takes a 3-question review**:
+Nothing enters C0 by category ("it's DB", "it's HTTP"). **Precondition (Q0): the module
+floor.** A candidate that fits in one function (HashUtil, DateUtil, JsonUtil, EnvUtil …)
+is not reviewable — it stays a function regardless of how many call sites it has. Only
+floor-passing candidates take the 3-question review:
 
 ```
 Q1. Rule of three: is this the 3rd REAL use site?
@@ -71,7 +74,8 @@ All three YES → admit to C0. Any NO → stays feature-local.
 - "Might need it later" speculative utilities (only real use sites count)
 
 **DI (dependency injection)**: introduce a container/injection pattern only when C0 has
-3+ modules; before that, explicit parameter passing is enough. C0 lives in `src/common/`,
+3+ modules — counting only floor-passing admitted modules (utils kept as functions never
+inflate this count); before that, explicit parameter passing is enough. C0 lives in `src/common/`,
 physically separated from features; no circular deps among C0 modules.
 
 ## 5. IN/OUT rules

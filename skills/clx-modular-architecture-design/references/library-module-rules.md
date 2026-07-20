@@ -42,8 +42,12 @@ variance is real:
 ```
 
 - The selection map is data (dict / match at the root), never if/elif chains inside modules.
+  It may select one variant or fan out to several active variants — either way the active
+  set lives at the root as data.
 - "We might add X later" fails the gate — log it as `[LOCAL]`; extracting the contract
-  later is one mechanical refactor precisely because of rules 1–2.
+  later is one mechanical refactor precisely because of rules 1–2. This holds even when
+  the contract already exists: a speculative extra variant of an admitted contract is
+  still refused — the Extension Points section lists today's variants only.
 - Gate passed → DESIGN.md gains an **Extension Points** section: contract, current
   variants, and a one-sentence "to add a variant: ...".
 
