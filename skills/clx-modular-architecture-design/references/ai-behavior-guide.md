@@ -19,15 +19,18 @@ State the Scale Gate verdict in one line before decomposing.
 e.g. `[Scale: Small — decompose to Feature level only, no C0 to start]`
 
 ### 1.4 Decompose + decision log
-Apply split gate / C0 review / merge signals while building the hierarchy tree, and
-**accumulate every decision as a log** (this becomes DESIGN.md's "Design Decision Log"):
+Apply split gate / C0 review / merge signals while building the hierarchy tree, then the
+Phase-4 library gates (extension gate, hidden-input sweep), and **accumulate every decision
+as a log** (this becomes DESIGN.md's "Design Decision Log"):
 
 ```
-[SPLIT] F1.3 CrawlVerifier out of F1.2 — 2 change reasons (crawl policy / validation rules) + independent test value
-[KEEP ] hash computation — stays a function (below module floor)
-[LOCAL] http_fetch — stays in F1 (1 use site, fails rule of three)
-[C0   ] C0.1 DatabaseGateway — 3 use sites (F1.5, F2.2, F3.4) + stable signature + domain-independent
-[MERGE] F2.3+F2.4 — always called together, no independent use site
+[SPLIT  ] F1.3 CrawlVerifier out of F1.2 — 2 change reasons (crawl policy / validation rules) + independent test value
+[KEEP   ] hash computation — stays a function (below module floor)
+[LOCAL  ] http_fetch — stays in F1 (1 use site, fails rule of three)
+[C0     ] C0.1 DatabaseGateway — 3 use sites (F1.5, F2.2, F3.4) + stable signature + domain-independent
+[MERGE  ] F2.3+F2.4 — always called together, no independent use site
+[VARIANT] ExporterContract {csv, parquet} — 2 real variants in requirements → registry at root
+[LOCAL  ] "pdf export later" — 0 real variants today, fails extension gate
 ```
 
 ### 1.5 Detailed IN/OUT specs
@@ -38,8 +41,15 @@ Types: Python projects use `list[Article]`, `Optional[float]`; TypeScript projec
 ```
 ← C0.1.get_secret("DB_URL")     # common-module method
 ← F1.2.crawl() return            # previous module's OUT
-← config.yaml["crawl"]["timeout"]
+← config.yaml["crawl"]["timeout"]   # loaded at composition root, passed as aux IN
 ← user_input                     # user input / API request
+```
+
+Each module card also lists its library boundary:
+
+```
+PUBLIC: crawl(), CrawlResult, CrawlError    # the only exports — internals private
+REMOVE: delete f1_crawler/ + unwire in main.py; F2 loses its main IN (falls back: none)
 ```
 
 ### 1.6 Refactor mode (existing code)
@@ -69,16 +79,18 @@ The deliverable is a **single `DESIGN.md` at the project root**. Never generate 
 ### 2.1 Required sections (in order)
 1. **Header**: project, version, one-liner, date, module count, scale verdict
 2. **Tech-stack table**: area / tech / why
-3. **Folder tree**: with module-ID comments
+3. **Folder tree**: with module-ID comments; mark each composition root (`main.py  # root`)
 4. **Main pipeline**: straight flow + per-stage OUT→IN chain table; optional mermaid `graph LR`
-5. **C0 modules** (if any): full specs + admission-review results
-6. **Feature modules**: per-feature section — internal pipeline, module IN/OUT specs,
-   internal logic, constraints
-7. **Dependency table**: module × C0/events used
-8. **Implementation checklist**: build order (checkboxes) — include one contract-test stub
+5. **C0 modules** (if any): full specs + admission-review results + standalone-test note
+6. **Extension points** (only if the extension gate passed): contract type, current
+   variants, selection map location, one-sentence "to add a variant: ..."
+7. **Feature modules**: per-feature section — internal pipeline, module IN/OUT specs,
+   PUBLIC surface, internal logic, constraints, removal note
+8. **Dependency table**: module × C0/events used
+9. **Implementation checklist**: build order (checkboxes) — include one contract-test stub
    per module boundary (the smallest test that fails if the IN/OUT contract breaks)
-9. **Design Decision Log**: the full log accumulated in 1.4
-10. **Migration plan** (refactor mode only): As-Is map, strangler order, cutover checks
+10. **Design Decision Log**: the full log accumulated in 1.4 (including [VARIANT] entries)
+11. **Migration plan** (refactor mode only): As-Is map, strangler order, cutover checks
 
 ### 2.2 Never omit
 - Per-stage OUT→IN chain (without it, data flow is unreadable)
@@ -100,14 +112,17 @@ The deliverable is a **single `DESIGN.md` at the project root**. Never generate 
 
 ## 3. Quality self-verification (after DESIGN.md)
 
-1. Decision-log completeness: every split/commonization/merge justified
+1. Decision-log completeness: every split/commonization/merge/variant justified
 2. Module floor: no function-sized modules
-3. C0 review: every C0 has 3+ sites / stable / domain-independent
+3. C0 review: every C0 has 3+ sites / stable / domain-independent / passes standalone test
 4. OUT=1 + fields, IN sources, type-chain matches
 5. Pipeline straightness, zero circular deps
 6. Scale Gate: module count not excessive for the scale
 7. Naming consistency (snake_case / CamelCase)
 8. Failure semantics on every module + pipeline policy stated
 9. Parallel marks + saturation math when resources were quantified
+10. PUBLIC surface on every module card (one entry + types, nothing else)
+11. Wiring only at composition roots; no hidden inputs (env/config at root or C0 config)
+12. Every extension point has 2+ real variants; every feature card has a removal note
 
-Append one line at the end of DESIGN.md: `[self-check: 9/9 passed]`
+Append one line at the end of DESIGN.md: `[self-check: 12/12 passed]`

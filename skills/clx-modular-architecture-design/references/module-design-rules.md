@@ -4,6 +4,9 @@ Core premise: **modularization has a cost** (indirection, wiring code, file coun
 load). Split or commonize only when evidence outweighs that cost, and log the evidence in
 the design decision log.
 
+These gates decide WHETHER a boundary exists. How each surviving boundary is shaped
+(public surface, wiring, extension, removal) is `library-module-rules.md` — Phase 4.
+
 ## 1. Module definition and the floor
 
 A module is a **cohesive responsibility unit worth testing independently**.
